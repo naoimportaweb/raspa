@@ -1,4 +1,4 @@
-import os, sys, traceback;
+import os, sys, traceback, re, json;
 
 sys.path.append( os.environ["RAIZ"] );
 
@@ -28,7 +28,10 @@ class Deputados():
             texto = li.get_attribute("textContent").strip();
             partes = texto.split(":");
             if partes[0].strip().lower() == campo.lower():
-                return partes[1].strip();
+                buffer = partes[1].strip();
+                buffer = re.sub(r'\n+', ' ', buffer);
+                buffer = re.sub(r'\s+', ' ', buffer);
+                return buffer;
         return "";
 
     def carregar_detalhes(self, deputado):
@@ -36,7 +39,7 @@ class Deputados():
         deputado["apelido"] = self.engine.element_value('//*[@id="nomedeputado"]',  "textContent");
         elementos_li = self.engine.elements('//*[@class="informacoes-deputado"]/li');
         deputado["nome"] = self.__carregar_campo_detalhes__( elementos_li, "Nome Civil"  );
-        deputado["partido"] = self.__carregar_campo_detalhes__( elementos_li, "Partido"     );
+        deputado["partido"] = self.__carregar_campo_detalhes__( elementos_li, "Partido" ).spit("-")[0].strip();
         deputado["data_nascimento"] = self.__carregar_campo_detalhes__( elementos_li, "Data de Nascimento"     );
         deputado["naturalidade"] = self.__carregar_campo_detalhes__( elementos_li, "Naturalidade"     );
         deputado["email"] = self.__carregar_campo_detalhes__( elementos_li, "E-mail"     );
@@ -56,9 +59,12 @@ class Deputados():
 if __name__ == "__main__":
     d = Deputados();
     if d.listar():
-        for deputado in d.deputados:
-            print( d.carregar_detalhes( deputado ) );
-            #break;
+        for i in range(len(d.deputados)):
+            d.deputados[i] = d.carregar_detalhes( d.deputados[i] );
+            print(d.deputados[i]);
+        with open("/tmp/deputados.json") as f:
+            f.write( json.dumps( d.deputados ) );
+        print("fim");
 
 
 
