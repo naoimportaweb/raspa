@@ -39,7 +39,7 @@ class Deputados():
         deputado["apelido"] = self.engine.element_value('//*[@id="nomedeputado"]',  "textContent");
         elementos_li = self.engine.elements('//*[@class="informacoes-deputado"]/li');
         deputado["nome"] = self.__carregar_campo_detalhes__( elementos_li, "Nome Civil"  );
-        deputado["partido"] = self.__carregar_campo_detalhes__( elementos_li, "Partido" ).spit("-")[0].strip();
+        deputado["partido"] = self.__carregar_campo_detalhes__( elementos_li, "Partido" ).split("-")[0].strip();
         deputado["data_nascimento"] = self.__carregar_campo_detalhes__( elementos_li, "Data de Nascimento"     );
         deputado["naturalidade"] = self.__carregar_campo_detalhes__( elementos_li, "Naturalidade"     );
         deputado["email"] = self.__carregar_campo_detalhes__( elementos_li, "E-mail"     );
