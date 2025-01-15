@@ -62,7 +62,7 @@ if __name__ == "__main__":
         for i in range(len(d.deputados)):
             d.deputados[i] = d.carregar_detalhes( d.deputados[i] );
             print(d.deputados[i]);
-        with open("/tmp/deputados.json") as f:
+        with open("/tmp/deputados.json", "w") as f:
             f.write( json.dumps( d.deputados ) );
         print("fim");
 
